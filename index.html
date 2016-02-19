@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PF 2016 od Jonáše | migdal.cz</title>
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.12.1/css/ol.css">
+    <script src="http://openlayers.org/en/v3.12.1/build/ol.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <style>
+        *, body, #map{
+            margin: 0;
+            padding: 0;
+        }
+        body, html, #map{
+            height: 100%;
+        }
+        #map{
+            width: 100%;
+        }
+        div.ol-attribution:not(.nsiwsugvdhgjqbhwdj){
+            background-color: rgba(0, 0, 0, .4);
+        }
+        div.ol-attribution ul{
+            text-shadow: none;
+            color: silver;
+        }
+            div.ol-attribution ul a{
+                color: grey;
+            }
+            div.ol-attribution ul li:not(:last-child){
+                display: none;
+            }
+
+        #floating{
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            z-index: 15;
+            width: 100%;
+            text-align: center;
+            color: silver;
+            font-family: "Open Sans", "Tahoma", Arial, sans-serif;
+            font-size: 13px;
+            letter-spacing: 2.9px;
+            pointer-events: none;
+        }
+        .ol-control.ol-zoom{
+            top: auto;
+            bottom: 5px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+            .ol-control.ol-zoom button{
+                background-color: rgba(0, 0, 0, 0.6);
+            }
+    </style>
+</head>
+<body>
+    <div id="floating">jonas.veselka@gisat.cz</div>
+    <div id="map" tabindex="0"></div>
+    <script>
+        $(document).ready(function(){
+            var osm = new ol.layer.Tile({
+                source: new ol.source.OSM()
+            });
+            var dark = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url:'http://{1-4}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+                })
+            });
+            var light = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url:'http://{1-4}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+                })
+            });
+            var toner = new ol.layer.Tile({
+                source: new ol.source.Stamen({
+                    layer: 'toner'
+                })
+            });
+            var watercolor = new ol.layer.Tile({
+                source: new ol.source.Stamen({
+                    layer: 'watercolor'
+                })
+            });
+            var outdoors = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'http://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png'
+                })
+            });
+            var transport = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'http://tile.thunderforest.com/transport/{z}/{x}/{y}.png'
+                })
+            });
+            var pioneer = new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'http://tile.thunderforest.com/pioneer/{z}/{x}/{y}.png'
+                })
+            });
+
+            var base = dark;
+            var p    = light;
+            var f    = outdoors;
+            var num2 = pioneer;
+            var num0 = transport;
+            var num1 = watercolor;
+            var num6 = toner;
+
+            var moveFromPlace = ol.proj.fromLonLat([14.434, 50.09]);
+            var moveToPlace = ol.proj.fromLonLat([14.4242, 50.0935]);
+
+            var view = new ol.View({
+                center: moveFromPlace,
+                zoom: 15
+            });
+            var map = new ol.Map({
+                layers: [base, p, f, num2, num0, num1, num6],
+                target: 'map',
+                controls: ol.control.defaults({
+                    attributionOptions: ({
+                        collapsible: false
+                    })
+                }),
+                view: view,
+                loadTilesWhileAnimating: true
+            });
+
+            var pan = ol.animation.pan({
+                duration: 4200,
+                source: (view.getCenter())
+            });
+            map.beforeRender(pan);
+            view.setCenter(moveToPlace);
+
+            map.on('dragend', function() {
+                console.log('Dragging ended.');
+            });
+
+
+            p.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(-660, -480);
+                ctx.beginPath();
+                ctx.moveTo(43.344,688);
+                ctx.lineTo(43.344,206.39999999999998);
+                ctx.lineTo(128.656,206.39999999999998);
+                ctx.quadraticCurveTo(180.25600000000003,206.39999999999998, 208.12,239.76799999999997);
+                ctx.quadraticCurveTo(235.984,273.13599999999997, 235.984,360.512);
+                ctx.lineTo(235.984,363.952);
+                ctx.quadraticCurveTo(235.984,451.328, 208.12,484.352);
+                ctx.quadraticCurveTo(180.25600000000003,517.376, 128.656,517.376);
+                ctx.lineTo(98.38400000000001,517.376);
+                ctx.lineTo(98.38400000000001,688);
+                ctx.lineTo(43.344,688);
+                ctx.moveTo(181.632,372.89599999999996);
+                ctx.lineTo(181.632,351.568);
+                ctx.quadraticCurveTo(181.632,250.43199999999996, 128.656,250.43199999999996);
+                ctx.lineTo(98.38400000000001,250.43199999999996);
+                ctx.lineTo(98.38400000000001,474.032);
+                ctx.lineTo(128.656,474.032);
+                ctx.quadraticCurveTo(181.632,474.032, 181.632,372.89599999999996);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            p.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+
+            f.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(-457, -480);
+                ctx.beginPath();
+                ctx.moveTo(98.38400000000001,469.904);
+                ctx.lineTo(98.38400000000001,688);
+                ctx.lineTo(43.344,688);
+                ctx.lineTo(43.344,206.39999999999998);
+                ctx.lineTo(208.46400000000003,206.39999999999998);
+                ctx.lineTo(208.46400000000003,250.43199999999996);
+                ctx.lineTo(98.38400000000001,250.43199999999996);
+                ctx.lineTo(98.38400000000001,425.87199999999996);
+                ctx.lineTo(198.144,425.87199999999996);
+                ctx.lineTo(198.144,469.904);
+                ctx.lineTo(98.38400000000001,469.904);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            f.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+            num2.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(-250, -480);
+                ctx.beginPath();
+                ctx.moveTo(38.872,286.55199999999996);
+                ctx.quadraticCurveTo(41.968,251.11999999999995,67.424,223.59999999999997);
+                ctx.quadraticCurveTo(92.88000000000001,196.07999999999998,140.352,196.07999999999998);
+                ctx.quadraticCurveTo(187.824,196.07999999999998,215.00000000000003,221.19199999999995);
+                ctx.quadraticCurveTo(242.17600000000002,246.30399999999997,242.17600000000002,311.32);
+                ctx.quadraticCurveTo(242.17600000000002,376.33599999999996,199.52,445.13599999999997);
+                ctx.lineTo(75.68,643.968);
+                ctx.lineTo(240.8,643.968);
+                ctx.lineTo(240.8,688);
+                ctx.lineTo(35.088,688);
+                ctx.lineTo(35.088,654.976);
+                ctx.quadraticCurveTo(35.088,619.888,46.440000000000005,592.3679999999999);
+                ctx.quadraticCurveTo(57.792,564.848,97.00800000000001,502.928);
+                ctx.lineTo(154.11200000000002,413.488);
+                ctx.quadraticCurveTo(187.824,366.70399999999995,187.824,310.28799999999995);
+                ctx.quadraticCurveTo(187.824,270.38399999999996,174.752,254.55999999999995);
+                ctx.quadraticCurveTo(161.68,238.736,137.94400000000002,238.736);
+                ctx.quadraticCurveTo(114.20800000000001,238.736,101.13600000000001,258.34399999999994);
+                ctx.quadraticCurveTo(88.06400000000001,277.95199999999994,83.936,329.55199999999996);
+                ctx.lineTo(35.776,321.984);
+                ctx.lineTo(41.968,251.11999999999995);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            num2.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+            num0.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(-30, -480);
+                ctx.beginPath();
+                ctx.moveTo(247.97000000000003,348.66499999999996);
+                ctx.lineTo(247.97000000000003,541.835);
+                ctx.quadraticCurveTo(247.97000000000003,628.83,220.22750000000002,662.0525);
+                ctx.quadraticCurveTo(192.485,695.275,140.7675,695.275);
+                ctx.quadraticCurveTo(89.05000000000001,695.275,61.307500000000005,662.0525);
+                ctx.quadraticCurveTo(33.565000000000005,628.83,33.565000000000005,541.835);
+                ctx.lineTo(33.565000000000005,348.66499999999996);
+                ctx.quadraticCurveTo(33.565000000000005,261.66999999999996,61.307500000000005,228.4475);
+                ctx.quadraticCurveTo(89.05000000000001,195.22499999999997,140.7675,195.22499999999997);
+                ctx.quadraticCurveTo(192.485,195.22499999999997,220.22750000000002,228.4475);
+                ctx.quadraticCurveTo(247.97000000000003,261.66999999999996,247.97000000000003,348.66499999999996);
+                ctx.moveTo(193.85500000000002,552.11);
+                ctx.lineTo(193.85500000000002,338.39);
+                ctx.quadraticCurveTo(193.85500000000002,239.74999999999994,141.11,239.74999999999994);
+                ctx.quadraticCurveTo(115.76500000000001,239.74999999999994,101.72250000000001,260.98499999999996);
+                ctx.quadraticCurveTo(87.68,282.21999999999997,87.68,338.39);
+                ctx.lineTo(87.68,552.11);
+                ctx.quadraticCurveTo(87.68,608.28,101.72250000000001,629.515);
+                ctx.quadraticCurveTo(115.76500000000001,650.75,141.11,650.75);
+                ctx.quadraticCurveTo(193.85500000000002,650.75,193.85500000000002,552.11);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            num0.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+            num1.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(213, -480);
+                ctx.beginPath();
+                ctx.moveTo(117.82000000000001,205.49999999999994);
+                ctx.lineTo(117.82000000000001,685);
+                ctx.lineTo(63.02,685);
+                ctx.lineTo(63.02,266.465);
+                ctx.lineTo(4.11,266.465);
+                ctx.lineTo(4.11,234.95499999999998);
+                ctx.lineTo(87.68,205.49999999999994);
+                ctx.lineTo(117.82000000000001,205.49999999999994);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            num1.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+            num6.on('precompose', function(event) {
+                var ctx = event.context;
+                ctx.save();
+                ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+                ctx.scale(1, 1);
+                ctx.translate(325, -480);
+                ctx.beginPath();
+                ctx.moveTo(152.75500000000002,404.15);
+                ctx.quadraticCurveTo(194.54000000000002,404.15,221.25500000000002,435.65999999999997);
+                ctx.quadraticCurveTo(247.97000000000003,467.16999999999996,247.97000000000003,549.7125);
+                ctx.quadraticCurveTo(247.97000000000003,632.255,219.88500000000002,663.765);
+                ctx.quadraticCurveTo(191.8,695.275,140.425,695.275);
+                ctx.quadraticCurveTo(89.05000000000001,695.275,61.307500000000005,663.765);
+                ctx.quadraticCurveTo(33.565000000000005,632.255,33.565000000000005,548.685);
+                ctx.lineTo(33.565000000000005,352.09);
+                ctx.quadraticCurveTo(33.565000000000005,263.03999999999996,61.650000000000006,229.13249999999994);
+                ctx.quadraticCurveTo(89.73500000000001,195.22499999999997,136.6575,195.22499999999997);
+                ctx.quadraticCurveTo(183.58,195.22499999999997,208.5825,219.54249999999996);
+                ctx.quadraticCurveTo(233.585,243.85999999999996,239.06500000000003,306.195);
+                ctx.lineTo(189.06,318.525);
+                ctx.quadraticCurveTo(186.32000000000002,273.99999999999994,174.3325,256.87499999999994);
+                ctx.quadraticCurveTo(162.345,239.74999999999994,138.7125,239.74999999999994);
+                ctx.quadraticCurveTo(115.08000000000001,239.74999999999994,101.38000000000001,261.3275);
+                ctx.quadraticCurveTo(87.68,282.905,87.68,340.445);
+                ctx.lineTo(87.68,429.495);
+                ctx.quadraticCurveTo(110.97000000000001,404.15,194.54000000000002,404.15);
+                ctx.moveTo(195.91000000000003,558.275);
+                ctx.lineTo(195.91000000000003,541.15);
+                ctx.quadraticCurveTo(195.91000000000003,446.62,142.13750000000002,446.62);
+                ctx.quadraticCurveTo(88.36500000000001,446.62,87.68,535.67);
+                ctx.lineTo(87.68,558.275);
+                ctx.quadraticCurveTo(87.68,652.805,141.79500000000002,652.805);
+                ctx.quadraticCurveTo(195.91000000000003,652.805,195.91000000000003,558.275);
+                ctx.clip();
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+            });
+            num6.on('postcompose', function(event) {
+                var ctx = event.context;
+                ctx.restore();
+            });
+
+
+            $(".ol-zoom button").click(function(){
+                $("#map").focus();
+            });
+            $("#map").focus(function(){
+                console.log("focus");
+            });
+
+            $("#map").focus();
+
+
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-71072208-3', 'auto');
+            ga('send', 'pageview');
+
+        });
+
+    </script>
+</body>
+</html>
